@@ -1,67 +1,72 @@
-# Simpletron: simulador SML y compilador de Simple
+# Proyecto Final - Simulador Simpletron y Compilador Simple
 
-Proyecto final de Programación Avanzada (UPAEP). Incluye una computadora virtual
-**Simpletron**, su lenguaje máquina **SML**, un compilador del lenguaje **Simple** a SML
-y la conversión/evaluación de expresiones infijas a postfijas.
+**Materia:** Programación Avanzada (UPAEP)  
+**Alumno:** Leonardo Huerta
 
-**Integrante:** Leonardo Huerta
+## Descripción del proyecto
+Este repositorio contiene el proyecto final de la materia, que consiste en el desarrollo de la computadora virtual **Simpletron** (capaz de ejecutar programas en lenguaje máquina **SML**) y un compilador para traducir código del lenguaje de alto nivel **Simple** a instrucciones SML, incluyendo la evaluación de expresiones aritméticas mediante conversión de notación infija a postfija.
 
-## Atribución y apoyo utilizado
-- El código base del simulador y del compilador me fue proporcionado por otra persona.
-- Utilicé el asistente de IA Claude como apoyo para entender el código, corregirlo y extenderlo
-  (operadores `>`, `<=`, `>=`, `!=`, validación de paréntesis, manejo de errores), y para armar
-  las pruebas y la documentación.
-- Yo revisé el código y lo ejecuté en mi equipo.
-
-## Estructura
-```
-src/simpletron.c     Simulador, conversión infija->postfija y compilador (un solo archivo)
-programas/simple/    Programas de prueba en Simple
-programas/sml/       SML generado por el compilador
-pruebas/             Script de pruebas, entradas y salidas
-docs/                Requerimientos y diseño
-evidencias/          Capturas de ejecución y de Git
+## Estructura de carpetas
+```text
+src/simpletron.c     Código fuente del compilador y del simulador
+programas/simple/    Programas de prueba escritos en lenguaje Simple
+programas/sml/       Archivos en código máquina (.sml) generados al compilar
+pruebas/             Scripts y archivos de entrada/salida para probar los casos
+docs/                Documentos de requerimientos y diseño del sistema
+evidencias/          Capturas de pantalla de las pruebas y del uso de ramas en Git
 ```
 
-## Compilación
-```
+## Cómo compilar
+Para compilar el programa con GCC desde la terminal (se agrega `-lm` por el uso de la librería `math.h`):
+
+```bash
 gcc src/simpletron.c -o simple -lm
 ```
-(`-lm` es necesario porque se usa `pow`.)
 
-## Ejecución
-```
+## Cómo ejecutar
+
+**1. Compilar un programa de Simple a SML:**
+```bash
 ./simple --compile programas/simple/suma.simple programas/sml/suma.sml
+```
+
+**2. Correr el archivo SML en el simulador:**
+```bash
 ./simple --run programas/sml/suma.sml
 ```
-En Windows usar `simple.exe` en lugar de `./simple`.
+*(En Windows se ejecuta con `simple.exe` en lugar de `./simple`).*
 
-## Ejemplo
-Entrada del programa `suma.simple` con `3` y `4`:
-```
-? ? 7
-REGISTROS: ...  (después se imprime el volcado de memoria)
-```
+### Ejemplo de uso
+Al correr `suma.sml` e ingresar los valores `3` y `4`:
+```text
+? 3
+? 4
+7
 
-## Lenguaje Simple soportado
-`rem`, `input`, `let`, `print`, `goto`, `if ... goto`, `end`. Variables de una letra, constantes
-enteras, operadores `+ - * / % ^` con paréntesis, y condiciones `< <= > >= == !=`.
+REGISTROS:
+...
+```
+Al terminar la ejecución, el programa muestra en pantalla el estado final de los registros y el vaciado completo de las 100 posiciones de memoria (memory dump).
+
+## Comandos soportados en Simple
+El compilador reconoce las siguientes instrucciones:
+- `rem` para comentarios
+- `input` y `print` para entrada y salida de datos
+- `let` para asignación y operaciones aritméticas (`+`, `-`, `*`, `/`, `%`, `^`) con uso de paréntesis
+- `goto` y `if ... goto` para saltos incondicionales y condicionales (`<`, `<=`, `>`, `>=`, `==`, `!=`)
+- `end` para finalizar el programa
 
 ## Pruebas
-```
+Para correr los casos de prueba de forma automática:
+```bash
 bash pruebas/correr_pruebas.sh
 ```
-Compila cada programa, lo ejecuta con entradas fijas y compara con la salida esperada (10 casos).
+Este script compila los programas de ejemplo, los ejecuta con las entradas de prueba y verifica que las salidas coincidan con los resultados esperados.
 
-## Archivos principales
-| Función | Qué hace |
-|---|---|
-| `pasar_a_postfija` | Algoritmo de pila; respeta precedencia y `^` asociativo por la derecha |
-| `correr_vm` | Ciclo traer-decodificar-ejecutar del Simpletron, con errores fatales |
-| `procesar_linea` | Primera pasada del compilador; marca saltos hacia adelante como pendientes |
-| `compilar` | Segunda pasada: resuelve saltos pendientes y escribe el `.sml` |
-| `emitir_salto` | Genera un salto o lo deja pendiente si la línea destino aún no existe |
+## Funcionamiento general del código
+1. **Conversión de expresiones:** Se utiliza una pila para pasar las operaciones de los comandos `let` de notación infija a postfija respetando la jerarquía de operadores.
+2. **Compilador (dos pasadas):** En la primera pasada lee línea por línea el archivo `.simple`, guarda variables, constantes y números de línea en la tabla de símbolos, y traduce cada instrucción a SML. Si encuentra un salto a una línea que todavía no aparece, lo guarda como pendiente y en la segunda pasada completa la dirección exacta antes de crear el archivo `.sml`.
+3. **Simulador Simpletron:** Carga las instrucciones del archivo `.sml` en el arreglo de memoria de 100 posiciones y las va ejecutando una por una con el acumulador y el contador de instrucciones, validando errores como división entre cero o códigos de operación inválidos.
 
-## Limitaciones conocidas
-Sin números negativos literales (`let x = -5`), sin variables de más de una letra obligatoria
-(se aceptan nombres largos), sin detección de desbordamiento a 4 dígitos.
+## Herramientas de apoyo
+Durante el desarrollo me apoyé en Claude para resolver algunas dudas sobre el manejo de cadenas en C, revisar detalles en las condiciones de salto y verificar que los casos de prueba funcionaran bien.
