@@ -1,0 +1,41 @@
+$ gcc -Wall src/simpletron.c -o simple -lm
+(sin errores ni advertencias)
+
+$ bash pruebas/correr_pruebas.sh
+OK    suma
+OK    mayor_a
+OK    mayor_b
+OK    contador_5
+OK    contador_0
+OK    distinto_si
+OK    distinto_no
+OK    expresiones
+OK    menor_igual_si
+OK    menor_igual_no
+
+Pasaron: 10  Fallaron: 0
+
+$ ./simple --compile programas/simple/suma.simple programas/sml/suma.sml
+Compilacion exitosa: programas/sml/suma.sml
+$ ./simple --run programas/sml/suma.sml   (entradas: 3 y 4)
+? ? 7
+
+REGISTROS:
+acumulador:          +0007
+contador_inst:          09
+registro_inst:       +4300
+codigo_op:              43
+operando:               00
+
+MEMORIA:
+        0     1     2     3     4     5     6     7     8     9
+00  +1099 +1098 +2099 +3098 +2196 +2096 +2197 +1197 +4300 +0000
+10  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+20  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+30  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+40  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+50  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+60  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+70  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+80  +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000 +0000
+90  +0000 +0000 +0000 +0000 +0000 +0000 +0007 +0007 +0004 +0003

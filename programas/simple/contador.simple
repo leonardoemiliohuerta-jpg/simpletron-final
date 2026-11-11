@@ -1,0 +1,10 @@
+10 rem suma de 1 hasta n usando <=
+20 input n
+30 let s = 0
+40 let i = 1
+50 if i > n goto 90
+60 let s = s + i
+70 let i = i + 1
+80 goto 50
+90 print s
+100 end

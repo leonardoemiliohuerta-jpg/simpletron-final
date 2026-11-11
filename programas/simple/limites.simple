@@ -1,0 +1,11 @@
+10 rem imprime 1 si a <= b; si no imprime 0 (prueba de <= y >=)
+20 input a
+30 input b
+40 if a <= b goto 70
+50 print z
+60 goto 100
+70 let z = 1
+80 if b >= a goto 95
+90 let z = 7
+95 print z
+100 end
